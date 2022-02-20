@@ -1,6 +1,5 @@
 package io.hreem.casestudies.order;
 
-import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -51,39 +50,30 @@ public class Service {
         // Persist
         ordersStore.addOrder(order);
 
+        // Ask barista to brew coffee
+        final var orderBrewRequest = new CoffeeBrewRequest(
+                order.orderNumber(),
+                order.beansReservationNumber(),
+                order.customerName(),
+                order.sku(),
+                order.quantity());
+        final var brewReceipt = baristaService.brewCoffee(orderBrewRequest);
+        Log.infof("brewreceipt: %s, %s", brewReceipt.brewRequestId(), brewReceipt.orderNumber());
+        ordersStore.updateOrder(order.withBrewRequestId(brewReceipt.brewRequestId(), Order.Status.PROCESSING));
+
         // Return order id
         return orderNumber;
     }
 
-    @Scheduled(every = "10s")
-    public void processOrder() throws InterruptedException {
-        // Get pending and processing orders
-        final var pendingOrders = ordersStore.getOrders().stream()
-                .filter(predicate -> predicate.orderStatus() == Order.Status.PENDING)
-                .collect(Collectors.toList());
+    @Scheduled(every = "0.3s")
+    public void processOrder() {
+        // Get processing orders
         final var processingOrders = ordersStore.getOrders().stream()
                 .filter(predicate -> predicate.orderStatus() == Order.Status.PROCESSING)
                 .collect(Collectors.toList());
 
-        if (pendingOrders.isEmpty() && processingOrders.isEmpty())
+        if (processingOrders.isEmpty())
             return;
-
-        // Ask barista to brew coffee
-        pendingOrders.stream()
-                .map(order -> new CoffeeBrewRequest(
-                        order.orderNumber(),
-                        order.beansReservationNumber(),
-                        order.customerName(),
-                        order.sku(),
-                        order.quantity()))
-                .parallel()
-                .map(baristaService::brewCoffee)
-                .forEach(brewReceipt -> {
-                    // Update order status
-                    Log.infof("brewreceipt: %s, %s", brewReceipt.brewRequestId(), brewReceipt.orderNumber());
-                    final var order = ordersStore.getOrder(brewReceipt.orderNumber());
-                    ordersStore.updateOrder(order.withBrewRequestId(brewReceipt.brewRequestId(), Order.Status.PROCESSING));
-                });
 
         // Check on barista
         processingOrders.stream()
@@ -101,8 +91,18 @@ public class Service {
         return;
     }
 
-    public List<Order> getAllOrders() {
-        return ordersStore.getOrders();
+    public OrderInformation getOrdersInformation() {
+        final var orders = ordersStore.getOrders();
+        final var pending = orders.stream()
+                .filter(predicate -> predicate.orderStatus() == Order.Status.PENDING)
+                .count();
+        final var processing = orders.stream()
+                .filter(predicate -> predicate.orderStatus() == Order.Status.PROCESSING)
+                .count();
+        final var completed = orders.stream()
+                .filter(predicate -> predicate.orderStatus() == Order.Status.COMPLETED)
+                .count();
+        return new OrderInformation(pending, processing, completed);
     }
 
 }

@@ -1,21 +1,21 @@
 traffic:
 	while true; do \
-		NAME=$(curl https://api.namefake.com/ | jq .name); \
 		ab -p create-order-payload.json \
-		-c 3 -n 3 -T 'application/json' localhost:8081/orders; \
-		sleep 10; \
+		-c 1000 -n 1000 -s 120 -T 'application/json' localhost:8080/orders | grep Failed; \
+		sleep 1; \
+	done
+
+monitor-beans:
+	while true; do \
+		BEANS=`curl localhost:8080/beans -H "Content-Type: application/json"`; \
+		echo "☕️ beans: $$BEANS grams in stock"; \
+		sleep 1; \
+		clear; \
 	done
 
 monitor-orders:
 	while true; do \
-		ORDERS=`curl localhost:8081/orders -H "Content-Type: application/json"`;\
-		PENDING=`echo $$ORDERS | jq | grep 'PENDING' -i -c`; \
-		PROCESSING=`echo $$ORDERS | jq | grep 'PROCESSING' -i -c`; \
-		COMPLETED=`echo $$ORDERS | jq | grep 'COMPLETED' -i -c`; \
-		echo ""; \
-		echo "Orders PENDING ⏱ : $$PENDING"; \
-		echo "Orders PROCESSING ☕️ : $$PROCESSING"; \
-		echo "Orders COMPLETED ✅ : $$COMPLETED"; \
+		curl localhost:8080/orders -H "Content-Type: application/json" | jq; \
 		sleep 1; \
 		clear; \
 	done

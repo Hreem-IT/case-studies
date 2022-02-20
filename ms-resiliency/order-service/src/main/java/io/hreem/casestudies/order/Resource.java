@@ -29,8 +29,8 @@ public class Resource {
     }
 
     @GET
-    public Response getAllOrders() {
-        final var response = orderService.getAllOrders();
+    public Response getOrdersInformation() {
+        final var response = orderService.getOrdersInformation();
         return Response.ok(response).build();
     }
 }

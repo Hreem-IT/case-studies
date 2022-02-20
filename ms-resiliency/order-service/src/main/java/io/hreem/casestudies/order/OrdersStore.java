@@ -25,9 +25,7 @@ public class OrdersStore {
     }
 
     public List<Order> getOrders() {
-        return orders.values()
-                .stream()
-                .toList();
+        return List.of(orders.values().toArray(Order[]::new));
     }
 
     public Order getOrder(UUID orderNumber) {
