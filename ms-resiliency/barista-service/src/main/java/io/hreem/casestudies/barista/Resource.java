@@ -27,10 +27,6 @@ public class Resource {
 
     @POST
     public UUID requestBrew(@Valid BrewRequest brewRequest) throws InterruptedException {
-        final var rnd = random.nextInt(2); // get a random number between 0 and 1
-
-        if (rnd == 0)
-            Thread.sleep(Duration.ofSeconds(10).toMillis());
         Log.info("Requesting brew for orderNr: " + brewRequest.orderNumber());
         final var pendingBrew = Brew.fromRequest(brewRequest);
         brewsStore.addOrder(pendingBrew);
