@@ -1,26 +1,21 @@
+traffic:
+	while true; do \
+		NAME=$(curl https://api.namefake.com/ | jq .name); \
+		ab -p create-order-payload.json \
+		-c 3 -n 3 -T 'application/json' localhost:8081/orders; \
+		sleep 10; \
+	done
 
-package:
-	mvn package
-
-k8s-deploy:
-	./mvnw clean package -Dquarkus.kubernetes.deploy=true
-
-.PHONY: bff-service
-local-dev-bff-service:
-	cd coffee-service-bff \
-	&& mvn quarkus:dev -Ddebug=5005 -Dquarkus.http.port=8080
-
-.PHONY: order-service
-local-dev-order-service:
-	cd order-service \
-	&& mvn quarkus:dev -Ddebug=5006 -Dquarkus.http.port=8081
-
-.PHONY: beans-service
-local-dev-beans-service:
-	cd beans-service \
-	&& mvn quarkus:dev -Ddebug=5007 -Dquarkus.http.port=8082
-
-.PHONY: barista-service
-local-dev-barista-service:
-	cd barista-service \
-	&& mvn quarkus:dev -Ddebug=5008 -Dquarkus.http.port=8083
+monitor-orders:
+	while true; do \
+		ORDERS=`curl localhost:8081/orders -H "Content-Type: application/json"`;\
+		PENDING=`echo $$ORDERS | jq | grep 'PENDING' -i -c`; \
+		PROCESSING=`echo $$ORDERS | jq | grep 'PROCESSING' -i -c`; \
+		COMPLETED=`echo $$ORDERS | jq | grep 'COMPLETED' -i -c`; \
+		echo ""; \
+		echo "Orders PENDING ⏱ : $$PENDING"; \
+		echo "Orders PROCESSING ☕️ : $$PROCESSING"; \
+		echo "Orders COMPLETED ✅ : $$COMPLETED"; \
+		sleep 1; \
+		clear; \
+	done

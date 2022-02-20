@@ -1,4 +1,4 @@
-package io.hreem.casestudies.order;
+package io.hreem.casestudies.order.gateway;
 
 import java.util.UUID;
 

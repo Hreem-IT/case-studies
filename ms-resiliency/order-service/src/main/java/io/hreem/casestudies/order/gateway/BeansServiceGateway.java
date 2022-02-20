@@ -1,9 +1,8 @@
-package io.hreem.casestudies.order;
-
-import java.util.UUID;
+package io.hreem.casestudies.order.gateway;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Response;
 
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
@@ -12,6 +11,6 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 public interface BeansServiceGateway {
 
     @POST
-    public UUID reserveBeansForOrder(BeansReservationRequest request);
+    public Response reserveBeansForOrder(BeansReservationRequest request);
 
 }

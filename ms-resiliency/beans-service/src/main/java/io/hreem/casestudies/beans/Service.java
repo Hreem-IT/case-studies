@@ -25,10 +25,6 @@ public class Service {
         // Fetch recipe for requested reservation
         final var recipe = recipeStore.getRecipe(request.sku());
 
-        // Check if beans are available is available
-        if (beansStore.getBeansStockGrams() < recipe.requiredGramsOfBeans())
-            throw new BadRequestException("Not enough beans in stock to fullfill reservation request!");
-
         final var reservationNumber = UUID.randomUUID();
         beansStore.reserveBeans(recipe.requiredGramsOfBeans(), reservationNumber);
 

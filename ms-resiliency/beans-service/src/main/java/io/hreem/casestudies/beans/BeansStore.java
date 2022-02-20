@@ -9,7 +9,9 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class BeansStore {
 
-    float beansStockGrams = 500;
+    // 10 tons of beans
+    float beansStockGrams = 10_000_000;
+
     Map<UUID, Float> reservedBeans = new HashMap<>();
 
     public float getBeansStockGrams() {
