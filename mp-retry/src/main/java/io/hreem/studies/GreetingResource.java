@@ -14,6 +14,14 @@ import io.quarkus.logging.Log;
 public class GreetingResource {
 
     @GET
+    @Path("/400")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response helloFailingWithInvalidRequest() {
+        Log.infof("Called hello with 400");
+        return Response.status(400).build();
+    }
+
+    @GET
     @Path("/404")
     @Produces(MediaType.TEXT_PLAIN)
     public Response helloFailing() {

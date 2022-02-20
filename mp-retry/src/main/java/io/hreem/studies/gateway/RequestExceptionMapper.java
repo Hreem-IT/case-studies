@@ -3,6 +3,9 @@ package io.hreem.studies.gateway;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.Priority;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.Priorities;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
@@ -11,10 +14,11 @@ import io.quarkus.logging.Log;
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 
 @Provider
-public class RetriableResponseExceptionMapper implements ResponseExceptionMapper<WebApplicationException> {
+@Priority(Priorities.ENTITY_CODER)
+public class RequestExceptionMapper implements ResponseExceptionMapper<WebApplicationException> {
 
     private static final List<Integer> RETRYABLE_STATUS_CODES = Arrays.asList(
-            // 400 type errors
+            // retryable 400 type errors
             Response.Status.CONFLICT.getStatusCode(),
             Response.Status.REQUEST_TIMEOUT.getStatusCode(),
             Response.Status.TOO_MANY_REQUESTS.getStatusCode(),
@@ -27,9 +31,12 @@ public class RetriableResponseExceptionMapper implements ResponseExceptionMapper
     @Override
     public WebApplicationException toThrowable(Response response) {
         if (RETRYABLE_STATUS_CODES.contains(response.getStatus())) {
-            Log.info("Retriable response: " + response.getStatus());
-            return new RetriableResponseException(response.getStatus());
+            return new RetryableRequestException(response);
         }
-        return new WebApplicationException(response);
+        return switch (response.getStatus()) {
+            case 400 -> new BadRequestException(response);
+            case 404 -> new NotFoundRequestException(response);
+            default -> new WebApplicationException(response);
+        };
     }
 }
