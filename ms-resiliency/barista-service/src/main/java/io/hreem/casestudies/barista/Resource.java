@@ -27,10 +27,11 @@ public class Resource {
 
     @POST
     public UUID requestBrew(@Valid BrewRequest brewRequest) throws InterruptedException {
-        final var rnd = random.nextInt(2); // get a random number between 0 and 1
-
+        // Add a random delay to simulate an unhealthy service
+        final var rnd = random.nextInt(2);
         if (rnd == 0)
-            Thread.sleep(Duration.ofSeconds(10).toMillis());
+            Thread.sleep(Duration.ofSeconds(30).toMillis());
+
         Log.info("Requesting brew for orderNr: " + brewRequest.orderNumber());
         final var pendingBrew = Brew.fromRequest(brewRequest);
         brewsStore.addOrder(pendingBrew);
