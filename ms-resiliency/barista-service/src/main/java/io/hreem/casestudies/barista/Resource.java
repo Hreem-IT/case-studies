@@ -1,9 +1,7 @@
 package io.hreem.casestudies.barista;
 
-import java.time.Duration;
 import java.util.Random;
 import java.util.UUID;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -28,9 +26,9 @@ public class Resource {
     @POST
     public UUID requestBrew(@Valid BrewRequest brewRequest) throws InterruptedException {
         // Add a random delay to simulate an unhealthy service
-        final var rnd = random.nextInt(2);
-        if (rnd == 0)
-            Thread.sleep(Duration.ofSeconds(30).toMillis());
+        // final var rnd = random.nextInt(2);
+        // if (rnd == 0)
+        // Thread.sleep(Duration.ofSeconds(30).toMillis());
 
         Log.info("Requesting brew for orderNr: " + brewRequest.orderNumber());
         final var pendingBrew = Brew.fromRequest(brewRequest);
