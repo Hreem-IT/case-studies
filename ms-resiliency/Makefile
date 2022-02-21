@@ -8,7 +8,11 @@ traffic:
 monitor-beans:
 	while true; do \
 		BEANS=`curl localhost:8080/beans -H "Content-Type: application/json"`; \
-		echo "☕️ beans: $$BEANS grams in stock"; \
+		if [ -z "$$BEANS" ]; then \
+			echo "Beans service not available at the moment, check back later!"; \
+			else \
+			echo "☕️ beans: $$BEANS grams"; \
+		fi; \
 		sleep 1; \
 		clear; \
 	done

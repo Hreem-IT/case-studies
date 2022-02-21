@@ -1,6 +1,7 @@
 package io.hreem.casestudies.bff;
 
 import javax.inject.Inject;
+import javax.naming.ServiceUnavailableException;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;

@@ -25,6 +25,10 @@ public class Resource {
 
     @GET
     public Response getBeansInStock() {
+        // Random 500 error added to simulate a failure
+        final var random = new Random();
+        if (random.nextInt(2) == 0)
+            return Response.serverError().build();
         return Response.ok(beansService.getBeansStockGrams()).build();
     }
 
