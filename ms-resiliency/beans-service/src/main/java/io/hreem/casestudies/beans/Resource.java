@@ -1,5 +1,6 @@
 package io.hreem.casestudies.beans;
 
+import java.util.Random;
 import java.util.UUID;
 
 import javax.inject.Inject;
@@ -35,6 +36,10 @@ public class Resource {
 
     @POST
     public Response reserveBeansForUpcomingOrder(@Valid BeansReservationRequest request) {
+        // Random 500 error added to simulate a failure
+        final var random = new Random();
+        if (random.nextInt(2) == 0)
+            return Response.serverError().build();
         return Response.ok(beansService.reserveBeansForUpcomingOrder(request)).build();
     }
 
