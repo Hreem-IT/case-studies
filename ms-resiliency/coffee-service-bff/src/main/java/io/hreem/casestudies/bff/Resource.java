@@ -6,6 +6,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
+import org.eclipse.microprofile.faulttolerance.Bulkhead;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 @Path("/")
@@ -27,6 +28,7 @@ public class Resource {
 
     @POST
     @Path("/orders")
+    @Bulkhead(value = 10, waitingTaskQueue = 10)
     public Response createOrder(OrderRequest request) {
         return Response
                 .ok(orderGateway.createOrder(request))

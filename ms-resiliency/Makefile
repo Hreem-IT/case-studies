@@ -1,7 +1,7 @@
 traffic:
 	while true; do \
 		ab -p create-order-payload.json \
-		-c 500 -n 500 -s 120 -T 'application/json' localhost:8080/orders | grep Failed; \
+		-c 30 -n 30 -s 120 -T 'application/json' localhost:8080/orders; \
 		sleep 1; \
 	done
 
