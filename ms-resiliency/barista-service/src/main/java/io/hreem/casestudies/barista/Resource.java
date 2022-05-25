@@ -1,9 +1,7 @@
 package io.hreem.casestudies.barista;
 
-import java.time.Duration;
 import java.util.Random;
 import java.util.UUID;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;

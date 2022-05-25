@@ -4,6 +4,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
+import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 @Path("/beans")
@@ -11,6 +12,7 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 public interface BeansServiceGateway {
 
     @POST
+    @Retry(maxRetries = 3, maxDuration = 4)
     public Response reserveBeansForOrder(BeansReservationRequest request);
 
 }
