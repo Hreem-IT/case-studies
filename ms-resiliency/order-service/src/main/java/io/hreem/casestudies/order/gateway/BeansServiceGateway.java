@@ -13,6 +13,7 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 public interface BeansServiceGateway {
 
     @POST
+    @Retry(maxRetries = 3, maxDuration = 4)
     public Response reserveBeansForOrder(BeansReservationRequest request);
 
 }
