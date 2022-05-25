@@ -13,3 +13,7 @@ Documentation used for help:
 ## /ms-resiliency
 
 Project containing a coffeeshop application with different stages of resiliency built in to the application.
+
+## /ms-testing
+
+Project aims to provide with a minimal distributed application, and examples containing unit-tests and service-tests.
