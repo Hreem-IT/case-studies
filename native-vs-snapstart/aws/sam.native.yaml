@@ -1,0 +1,35 @@
+  AWSTemplateFormatVersion: '2010-09-09'
+  Transform: AWS::Serverless-2016-10-31
+  Description: AWS Serverless Quarkus HTTP - native-vs-snapstart-1.0-SNAPSHOT
+  Globals:
+    Api:
+      EndpointConfiguration: REGIONAL
+      BinaryMediaTypes:
+        - "*/*"
+
+  Resources:
+    NativeVsSnapstart:
+      Type: AWS::Serverless::Function
+      Properties:
+        FunctionName: native-vs-snapstart-native
+        Handler: not.used.in.provided.runtime
+        Runtime: provided
+        CodeUri: ../target/function.zip
+        MemorySize: 512
+        Policies:
+          - AWSLambdaBasicExecutionRole
+          - AmazonDynamoDBFullAccess
+        Timeout: 15
+        Environment:
+          Variables:
+            DISABLE_SIGNAL_HANDLERS: true
+        Events:
+          HttpApiEvent:
+            Type: HttpApi
+
+  Outputs:
+    NativeVsSnapstartNativeApi:
+      Description: URL for application
+      Value: !Sub 'https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/'
+      Export:
+        Name: NativeVsSnapstartNativeApi

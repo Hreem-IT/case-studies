@@ -1,0 +1,45 @@
+name: 🚀 Deploy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-native:
+    name: 🚀 Deploy [Native]
+    runs-on: ubuntu-latest
+    env:
+      MVN: mvn --show-version --batch-mode
+    steps:
+      - name: GraalVM 22.3.0
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: 17
+          version: 22.3.0
+          native-image-musl: true
+          set-java-home: true
+
+      - name: Setup AWS SAM CLI
+        uses: aws-actions/setup-sam@v2
+        with:
+          version: 1.66.0
+
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: checkout
+        uses: actions/checkout@v2.4.2
+        with:
+          token: ${{ secrets.PAT }}
+      - name: cache ~/.m2
+        uses: actions/cache@v3.0.5
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: 🔨 Build
+        working-directory: native-vs-snapstart
+        run: |
+          make deploy
