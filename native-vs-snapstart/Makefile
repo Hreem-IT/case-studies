@@ -7,7 +7,7 @@ build_lambdas:
 
 # REGION=eu-west-1 make deploy
 deploy:
-	./mvnw clean package -DskipTests -Pnative -Dquarkus.native.container-build=true
+	./mvnw clean package -DskipTests -Pnative
 	sam deploy \
 		--no-confirm-changeset \
 		--no-fail-on-empty-changeset \
