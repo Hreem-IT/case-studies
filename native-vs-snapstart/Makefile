@@ -1,13 +1,6 @@
-
-build:
-	./mvnw clean package -DskipTests -Pnative
-
-build_lambdas:
-	./mvnw clean package -DskipTests -Pnative,lambda -Dquarkus.profile=aws
-
 # REGION=eu-west-1 make deploy
 deploy:
-	./mvnw clean package -DskipTests -Pnative
+	./mvnw clean package -DskipTests -Pnative -Dquarkus.native.container-build=true
 	sam deploy \
 		--no-confirm-changeset \
 		--no-fail-on-empty-changeset \
