@@ -21,12 +21,12 @@ This means that slowest 1% of the traffic took roughly 5 seconds to serve, which
 ![image](https://user-images.githubusercontent.com/10097082/204672907-ed75ec4e-c5e3-46f0-b30f-aafbb22cfd9f.png)
 Going in to the test, I was actually hoping to see similar overall durations on snapstart as on native image, as even in native we have to account for those
 small percentages of times when an actual cold-start will be required. We can however see that running on Substrate VM in a natively compiled binary is still
-giving the best balance (for now) in terms of lowest possible cold-start times, as well as fast warm-state durations.
+giving the best balance (for now) in terms of lowest possible cold-start times, as well as faster warm-state durations across the board.
 
 # Conclusion
 I do think that the infrequently occuring spikes in snapstar is probably a performance fix that AWS will amend in the future. If we thus disregard the p99 metric,
-we can actually see that we are getting pretty comparable results this a vanilla jar+snapstar configuration to a graalvm native image! 
-Which is good news as this means developers will be get to write their lambdas in their favourite type-safe language, not have to worry about a long and tedious native compilation
-phase and also get the benefits of much faster cold-start times!
+we can actually see that we are getting pretty comparable results to graalvm native image with a vanilla jar+snapstar configuration! 
+This is good news as this means developers will get to write their lambdas in their favourite type-safe language, not have to worry about a long and tedious native compilation
+phase, not have to worry about the code running in a close-world assumption with its included limits, and also get the benefits of much faster cold-start times!
 
 All in all, looks very promising.
