@@ -11,25 +11,25 @@
     NativeVsSnapstart:
       Type: AWS::Serverless::Function
       Properties:
-        FunctionName: native-vs-snapstart-native
-        Handler: not.used.in.provided.runtime
-        Runtime: provided
+        FunctionName: native-vs-snapstart-jar-snapstart
+        Handler: io.quarkus.amazon.lambda.runtime.QuarkusStreamHandler::handleRequest
+        Runtime: java11
         CodeUri: ../target/function.zip
+        SnapStart:
+          ApplyOn: PublishedVersions
+        AutoPublishAlias: live
         MemorySize: 1024
         Policies:
           - AWSLambdaBasicExecutionRole
           - AmazonDynamoDBFullAccess
         Timeout: 15
-        Environment:
-          Variables:
-            DISABLE_SIGNAL_HANDLERS: true
         Events:
           HttpApiEvent:
             Type: HttpApi
 
   Outputs:
-    NativeVsSnapstartNativeApi:
+    NativeVsSnapstartApi:
       Description: URL for application
       Value: !Sub 'https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/'
       Export:
-        Name: NativeVsSnapstartNativeApi
+        Name: NativeVsSnapstartApi
