@@ -21,7 +21,7 @@ This means that slowest 1% of the traffic took roughly 5 seconds to serve, which
 ![image](https://user-images.githubusercontent.com/10097082/204672907-ed75ec4e-c5e3-46f0-b30f-aafbb22cfd9f.png)
 Going in to the test, I was actually hoping to see similar overall durations on snapstart as on native image, as even in native we have to account for those
 small percentages of times when an actual cold-start will be required. We can however see that running on Substrate VM in a natively compiled binary is still
-giving the best balance in terms of lowest possible cold-start times, as well as fast warm-state durations.
+giving the best balance (for now) in terms of lowest possible cold-start times, as well as fast warm-state durations.
 
 # Conclusion
 I do think that the infrequently occuring spikes in snapstar is probably a performance fix that AWS will amend in the future. If we thus disregard the p99 metric,
